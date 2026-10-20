@@ -9,9 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoR6+8MZ+gTj4dQ=" crossorigin="">
   <link rel="stylesheet" href="style.css">
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
   <script src="script.js" defer></script>
 </head>
 <body>
@@ -20,7 +18,7 @@
   <header class="site-header">
     <a class="wordmark" href="#top" aria-label="Not Just Vienna home">NOT JUST<br>VIENNA<span>✳</span></a>
     <nav aria-label="Main navigation">
-      <a href="#discover">The Edit</a><a href="#map-section">Map</a><a href="#itinerary">The Day Plan</a>
+      <a href="#discover">The Edit</a><a href="#city-gallery">City Stories</a><a href="#itinerary">The Day Plan</a>
     </nav>
     <a class="header-cta" href="#discover">FIND YOUR SPOT ↗</a>
   </header>
@@ -58,12 +56,18 @@
       <div class="surprise-row"><p>CAN'T DECIDE?<br><strong>LET THE CITY CHOOSE.</strong></p><button id="surprise" class="pill-btn" type="button">SURPRISE ME ↗</button></div>
     </section>
 
-    <section id="map-section" class="section map-section" aria-labelledby="map-title"><div class="section-head"><div><p class="eyebrow">02 / FIND YOUR WAY</p><h2 id="map-title">ON THE <i>MAP.</i></h2></div><p>All the spots, one city. Click a pin to explore a place.</p></div><div class="map-layout"><div id="vienna-map" aria-label="Interactive map showing selected places in Vienna"></div><aside class="map-aside"><span class="aside-symbol">✳</span><p>THE CITY IS YOURS.</p><h3>Take the scenic route.</h3><span>Tip: choose a pin and open directions in Google Maps.</span><a href="https://www.openstreetmap.org/#map=12/48.2082/16.3738" target="_blank" rel="noopener noreferrer">OPEN FULL CITY MAP ↗</a></aside></div><p class="credits">Map data © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a>. Pins and descriptions are curated examples.</p></section>
+    <section id="city-gallery" class="section city-gallery" aria-labelledby="stories-title">
+      <div class="section-head"><div><p class="eyebrow">02 / THE PHOTO DIARY</p><h2 id="stories-title">CITY <i>STORIES.</i></h2></div><p>Six real places. Six little reasons to fall for Vienna. Follow the city, one stop at a time.</p></div>
+      <div class="story-layout">
+        <div class="story-copy"><span class="story-index">VIENNA / FIELD NOTES / 2026</span><span class="story-asterisk" aria-hidden="true">✳</span><h3>NO MAP.<br>JUST <em>MAGIC.</em></h3><p>From old-world coffeehouses to an evening above the rooftops, the best city guides leave a little room to wander.</p><a class="story-cta" href="#discover">FIND YOUR NEXT STOP ↗</a></div>
+        <figure class="story-photo"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Belvedere-palace-garden-vienna.jpg?width=1100" alt="Upper Belvedere Palace in Vienna" loading="lazy"><figcaption>POSTCARD Nº 01 — BELVEDERE, VIENNA <a href="https://commons.wikimedia.org/wiki/File:Belvedere-palace-garden-vienna.jpg" target="_blank" rel="noopener noreferrer">PHOTO CREDIT / LICENSE ↗</a></figcaption></figure>
+      </div>
+    </section>
 
     <section id="itinerary" class="section itinerary" aria-labelledby="day-title"><div class="section-head"><div><p class="eyebrow">03 / THE LITTLE ITINERARY</p><h2 id="day-title">ONE <i>GOOD DAY.</i></h2></div><p>Start with coffee. Go somewhere inspiring. End outside.</p></div><div class="day-grid"><div><span class="time">09:30 / SLOW START</span><h3>COFFEE</h3><p>Start at a classic Viennese café.</p></div><div><span class="time">13:00 / GET CURIOUS</span><h3>CULTURE</h3><p>Head to MuseumsQuartier for art and architecture.</p></div><div><span class="time">17:00 / EXHALE</span><h3>OUTDOORS</h3><p>Finish with a stroll through a green corner of Vienna.</p></div></div></section>
 
     <section class="closer"><p>GOOD PLACES. BETTER STORIES.</p><h2>LESS TOURIST.<br><em>MORE VIENNA.</em></h2><a href="#top">BACK TO TOP ↑</a></section>
   </main>
-  <footer><strong>NOT JUST VIENNA ✳</strong><span>MADE WITH LOVE IN WIEN · © 2026</span><span>AN INDEPENDENT CITY GUIDE</span></footer>
+  <footer><strong>NOT JUST VIENNA ✳</strong><span>MADE WITH LOVE IN WIEN · © 2026</span><span>PHOTOS: WIKIMEDIA COMMONS · SEE INDIVIDUAL CREDITS</span></footer>
 </body>
 </html>

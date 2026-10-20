@@ -1,273 +1,33 @@
+// Curated starter data. Photos are illustrative, not necessarily photographs of each venue.
 const places = [
-  {
-    id: 'central',
-    name: 'Café Central',
-    category: 'coffee',
-    district: '1010',
-    neighborhood: 'Innere Stadt',
-    moods: ['slow'],
-    description: 'A grand, historic Viennese coffeehouse experience.',
-    lat: 48.2104,
-    lng: 16.3653
-  },
-  {
-    id: 'mq',
-    name: 'MuseumsQuartier',
-    category: 'culture',
-    district: '1070',
-    neighborhood: 'Neubau',
-    moods: ['art'],
-    description: 'A lively meeting place for art, architecture and city life.',
-    lat: 48.2030,
-    lng: 16.3585
-  },
-  {
-    id: 'prater',
-    name: 'Wiener Prater',
-    category: 'outdoors',
-    district: '1020',
-    neighborhood: 'Leopoldstadt',
-    moods: ['fresh'],
-    description: 'Old-school fun, wide avenues and room to wander.',
-    lat: 48.2167,
-    lng: 16.3959
-  },
-  {
-    id: 'burggarten',
-    name: 'Burggarten',
-    category: 'outdoors',
-    district: '1010',
-    neighborhood: 'Innere Stadt',
-    moods: ['fresh', 'slow'],
-    description: 'An easy green pause right in the heart of the city.',
-    lat: 48.2047,
-    lng: 16.3664
-  },
-  {
-    id: 'belvedere',
-    name: 'Belvedere',
-    category: 'culture',
-    district: '1030',
-    neighborhood: 'Landstraße',
-    moods: ['art', 'fresh'],
-    description: 'Baroque gardens and an extraordinary art collection.',
-    lat: 48.1915,
-    lng: 16.3809
-  },
-  {
-    id: 'kahlenberg',
-    name: 'Kahlenberg',
-    category: 'outdoors',
-    district: '1190',
-    neighborhood: 'Döbling',
-    moods: ['fresh'],
-    description: 'A hillside viewpoint when you want to see the city from above.',
-    lat: 48.2768,
-    lng: 16.3365
-  }
+  {id:'central',name:'Café Central',category:'coffee',district:'1010',neighborhood:'Innere Stadt',moods:['slow'],description:'A grand, historic Viennese coffeehouse experience.',lat:48.2104,lng:16.3653,image:'https://commons.wikimedia.org/wiki/Special:FilePath/Cafe%20Central%2C%20Vienna.jpg?width=900',credit:'https://commons.wikimedia.org/wiki/File:Cafe_Central%2C_Vienna.jpg'},
+  {id:'mq',name:'MuseumsQuartier',category:'culture',district:'1070',neighborhood:'Neubau',moods:['art'],description:'A lively meeting place for art, architecture and city life.',lat:48.2030,lng:16.3585,image:'https://commons.wikimedia.org/wiki/Special:FilePath/MuseumsQuartier%20Vienna.jpg?width=900',credit:'https://commons.wikimedia.org/wiki/File:MuseumsQuartier_Vienna.jpg'},
+  {id:'prater',name:'Wiener Prater',category:'outdoors',district:'1020',neighborhood:'Leopoldstadt',moods:['fresh'],description:'Old-school fun, wide avenues and room to wander.',lat:48.2167,lng:16.3959,image:'https://commons.wikimedia.org/wiki/Special:FilePath/Ferris%20wheel%20in%20Prater.jpg?width=900',credit:'https://commons.wikimedia.org/wiki/File:Ferris_wheel_in_Prater.jpg'},
+  {id:'burggarten',name:'Burggarten',category:'outdoors',district:'1010',neighborhood:'Innere Stadt',moods:['fresh','slow'],description:'An easy green pause right in the heart of the city.',lat:48.2047,lng:16.3664,image:'https://commons.wikimedia.org/wiki/Special:FilePath/Burggarten%2C%20Vienna.jpg?width=900',credit:'https://commons.wikimedia.org/wiki/File:Burggarten%2C_Vienna.jpg'},
+  {id:'belvedere',name:'Belvedere',category:'culture',district:'1030',neighborhood:'Landstraße',moods:['art','fresh'],description:'Baroque gardens and an extraordinary art collection.',lat:48.1915,lng:16.3809,image:'https://commons.wikimedia.org/wiki/Special:FilePath/Belvedere-palace-garden-vienna.jpg?width=900',credit:'https://commons.wikimedia.org/wiki/File:Belvedere-palace-garden-vienna.jpg'},
+  {id:'kahlenberg',name:'Kahlenberg',category:'outdoors',district:'1190',neighborhood:'Döbling',moods:['fresh'],description:'A hillside viewpoint when you want to see the city from above.',lat:48.2768,lng:16.3365,image:'https://commons.wikimedia.org/wiki/Special:FilePath/View%20of%20Vienna%20from%20Kahlenberg%20-%20panoramio.jpg?width=900',credit:'https://commons.wikimedia.org/wiki/File:View_of_Vienna_from_Kahlenberg_-_panoramio.jpg'}
 ];
 
-const state = {
-  category: 'all',
-  mood: 'all',
-  search: '',
-  savedOnly: false
-};
+const state={category:'all',mood:'all',search:'',savedOnly:false};
+const grid=document.querySelector('#places-grid');
+const empty=document.querySelector('#empty-state');
+const count=document.querySelector('#result-count');
+const savedCount=document.querySelector('#saved-count');
+const savedToggle=document.querySelector('#show-saved');
+let saved=new Set();
+try {const stored=JSON.parse(localStorage.getItem('njv-saved')||'[]'); if(Array.isArray(stored)) saved=new Set(stored.filter(x=>typeof x==='string'));}catch(e){/* browsing still works without storage */}
+const escapeHTML=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const directions=p=>`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name+' Vienna')}`;
+const label={coffee:'COFFEE',culture:'CULTURE',outdoors:'OUTDOORS'};
 
-const grid = document.querySelector('#places-grid');
-const empty = document.querySelector('#empty-state');
-const count = document.querySelector('#result-count');
-const savedCount = document.querySelector('#saved-count');
-const savedToggle = document.querySelector('#show-saved');
+function filteredPlaces(){return places.filter(p=>(state.category==='all'||p.category===state.category)&&(state.mood==='all'||p.moods.includes(state.mood))&&(!state.savedOnly||saved.has(p.id))&&`${p.name} ${p.neighborhood} ${p.district} ${p.description}`.toLowerCase().includes(state.search));}
+function render(){const shown=filteredPlaces();count.textContent=`${shown.length} HANDPICKED ${shown.length===1?'SPOT':'SPOTS'}`;savedToggle.textContent=state.savedOnly?'← SHOW ALL SPOTS':'♡ MY SAVED SPOTS ('+saved.size+')';empty.hidden=shown.length!==0;grid.innerHTML=shown.map(p=>`<article class="place-card"><div class="place-image"><img src="${p.image}" alt="Photograph of ${escapeHTML(p.name)}, Vienna" loading="lazy"><span class="image-label">${label[p.category]}</span><button class="save-btn ${saved.has(p.id)?'saved':''}" type="button" data-save="${p.id}" aria-label="${saved.has(p.id)?'Remove':'Save'} ${escapeHTML(p.name)}" aria-pressed="${saved.has(p.id)}">${saved.has(p.id)?'♥':'♡'}</button></div><div class="place-heading"><h3>${escapeHTML(p.name)}</h3><span>${p.district} WIEN</span></div><p>${escapeHTML(p.description)}</p><div class="place-links"><span>${escapeHTML(p.neighborhood)}</span><a href="${directions(p)}" target="_blank" rel="noopener noreferrer">DIRECTIONS ↗</a></div><a class="photo-credit" href="${p.credit}" target="_blank" rel="noopener noreferrer">PHOTO: WIKIMEDIA COMMONS · CREDIT & LICENSE ↗</a></article>`).join('');}
 
-let saved = new Set();
-
-try {
-  const stored = JSON.parse(localStorage.getItem('njv-saved') || '[]');
-  if (Array.isArray(stored)) {
-    saved = new Set(stored.filter(x => typeof x === 'string'));
-  }
-} catch (e) {}
-
-const escapeHTML = (s) =>
-  String(s).replace(/[&<>"']/g, c => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;'
-  }[c]));
-
-const directions = (p) =>
-  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name + ' Vienna')}`;
-
-const label = {
-  coffee: 'COFFEE',
-  culture: 'CULTURE',
-  outdoors: 'OUTDOORS'
-};
-
-function filteredPlaces() {
-  return places.filter(p =>
-    (state.category === 'all' || p.category === state.category) &&
-    (state.mood === 'all' || p.moods.includes(state.mood)) &&
-    (!state.savedOnly || saved.has(p.id)) &&
-    `${p.name} ${p.neighborhood} ${p.district} ${p.description}`
-      .toLowerCase()
-      .includes(state.search)
-  );
-}
-
-function updateSavedToggle() {
-  savedCount.textContent = saved.size;
-  savedToggle.innerHTML = state.savedOnly
-    ? '← SHOW ALL SPOTS'
-    : `♡ MY SAVED SPOTS (<span id="saved-count">${saved.size}</span>)`;
-  savedToggle.setAttribute('aria-pressed', String(state.savedOnly));
-}
-
-function render() {
-  const shown = filteredPlaces();
-
-  count.textContent = `${shown.length} HANDPICKED ${shown.length === 1 ? 'SPOT' : 'SPOTS'}`;
-  empty.hidden = shown.length !== 0;
-
-  grid.innerHTML = shown.map((p, index) => `
-    <article class="place-card editorial-card">
-      <div class="card-topline">
-        <span class="image-label">${label[p.category]}</span>
-        <button
-          class="save-btn ${saved.has(p.id) ? 'saved' : ''}"
-          type="button"
-          data-save="${p.id}"
-          aria-label="${saved.has(p.id) ? 'Remove' : 'Save'} ${escapeHTML(p.name)}"
-          aria-pressed="${saved.has(p.id)}"
-        >
-          ${saved.has(p.id) ? '♥' : '♡'}
-        </button>
-      </div>
-
-      <div class="card-number">0${index + 1}</div>
-
-      <div class="place-heading">
-        <h3>${escapeHTML(p.name)}</h3>
-        <span>${p.district} WIEN</span>
-      </div>
-
-      <p class="editorial-description">${escapeHTML(p.description)}</p>
-
-      <div class="place-links">
-        <span>${escapeHTML(p.neighborhood)}</span>
-        <a href="${directions(p)}" target="_blank" rel="noopener noreferrer">DIRECTIONS ↗</a>
-      </div>
-    </article>
-  `).join('');
-
-  updateSavedToggle();
-}
-
-document.querySelectorAll('[data-category]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    state.category = btn.dataset.category;
-    document.querySelectorAll('[data-category]').forEach(x => {
-      const on = x === btn;
-      x.classList.toggle('active', on);
-      x.setAttribute('aria-pressed', String(on));
-    });
-    render();
-  });
-});
-
-document.querySelectorAll('[data-mood]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    state.mood = btn.dataset.mood;
-    document.querySelectorAll('[data-mood]').forEach(x => {
-      const on = x === btn;
-      x.classList.toggle('active', on);
-      x.setAttribute('aria-pressed', String(on));
-    });
-    render();
-  });
-});
-
-document.querySelector('#search').addEventListener('input', e => {
-  state.search = e.target.value.toLowerCase().trim();
-  render();
-});
-
-savedToggle.addEventListener('click', () => {
-  state.savedOnly = !state.savedOnly;
-  render();
-});
-
-grid.addEventListener('click', e => {
-  const btn = e.target.closest('[data-save]');
-  if (!btn) return;
-
-  const id = btn.dataset.save;
-
-  if (saved.has(id)) saved.delete(id);
-  else saved.add(id);
-
-  try {
-    localStorage.setItem('njv-saved', JSON.stringify([...saved]));
-  } catch (e) {}
-
-  render();
-});
-
-document.querySelector('#surprise').addEventListener('click', () => {
-  const pool = filteredPlaces().length ? filteredPlaces() : places;
-  const p = pool[Math.floor(Math.random() * pool.length)];
-
-  document.querySelector('#search').value = p.name;
-  state.search = p.name.toLowerCase();
-  state.category = 'all';
-  state.mood = 'all';
-  state.savedOnly = false;
-
-  document.querySelectorAll('[data-category]').forEach(btn => {
-    const on = btn.dataset.category === 'all';
-    btn.classList.toggle('active', on);
-    btn.setAttribute('aria-pressed', String(on));
-  });
-
-  document.querySelectorAll('[data-mood]').forEach(btn => {
-    const on = btn.dataset.mood === 'all';
-    btn.classList.toggle('active', on);
-    btn.setAttribute('aria-pressed', String(on));
-  });
-
-  render();
-  document.querySelector('#discover').scrollIntoView({ behavior: 'smooth' });
-});
-
+document.querySelectorAll('[data-category]').forEach(btn=>btn.addEventListener('click',()=>{state.category=btn.dataset.category;document.querySelectorAll('[data-category]').forEach(x=>{const on=x===btn;x.classList.toggle('active',on);x.setAttribute('aria-pressed',String(on));});render();}));
+document.querySelectorAll('[data-mood]').forEach(btn=>btn.addEventListener('click',()=>{state.mood=btn.dataset.mood;document.querySelectorAll('[data-mood]').forEach(x=>{const on=x===btn;x.classList.toggle('active',on);x.setAttribute('aria-pressed',String(on));});render();}));
+document.querySelector('#search').addEventListener('input',e=>{state.search=e.target.value.toLowerCase().trim();render();});
+savedToggle.addEventListener('click',()=>{state.savedOnly=!state.savedOnly;savedToggle.setAttribute('aria-pressed',String(state.savedOnly));savedToggle.textContent=state.savedOnly?'← SHOW ALL SPOTS':'♡ MY SAVED SPOTS ('+saved.size+')';render();});
+grid.addEventListener('click',e=>{const btn=e.target.closest('[data-save]');if(!btn)return;const id=btn.dataset.save;if(saved.has(id))saved.delete(id);else saved.add(id);try{localStorage.setItem('njv-saved',JSON.stringify([...saved]));}catch(e){}if(!state.savedOnly)savedToggle.textContent='♡ MY SAVED SPOTS ('+saved.size+')';render();});
+document.querySelector('#surprise').addEventListener('click',()=>{const pool=filteredPlaces().length?filteredPlaces():places;const p=pool[Math.floor(Math.random()*pool.length)];document.querySelector('#search').value=p.name;state.search=p.name.toLowerCase();state.category='all';state.mood='all';state.savedOnly=false;document.querySelectorAll('[data-category],[data-mood]').forEach(btn=>{const on=btn.dataset.category==='all'||btn.dataset.mood==='all';btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));});savedToggle.setAttribute('aria-pressed','false');savedToggle.textContent='♡ MY SAVED SPOTS ('+saved.size()+')';render();document.querySelector('#discover').scrollIntoView({behavior:'smooth'});});
 render();
 
-/* MAP */
-const mapNode = document.querySelector('#vienna-map');
-
-if (typeof L !== 'undefined') {
-  const map = L.map(mapNode, { scrollWheelZoom: false }).setView([48.2082, 16.3738], 12);
-
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    maxZoom: 19
-  }).addTo(map);
-
-  places.forEach(p => {
-    L.marker([p.lat, p.lng]).addTo(map).bindPopup(`
-      <div class="map-popup">
-        <strong>${escapeHTML(p.name)}</strong><br>
-        ${escapeHTML(p.neighborhood)}<br>
-        <a href="${directions(p)}" target="_blank" rel="noopener noreferrer">DIRECTIONS ↗</a>
-      </div>
-    `);
-  });
-
-  setTimeout(() => {
-    map.invalidateSize();
-  }, 200);
-} else {
-  mapNode.innerHTML = '<p style="padding:30px">Map could not load. Check your connection or open the full city map using the link.</p>';
-}
