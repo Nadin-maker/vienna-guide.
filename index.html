@@ -3,11 +3,109 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Not Just Vienna</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NOT JUST VIENNA — Your City Guide</title>
+  <meta name="description" content="Explore Vienna beyond the postcards.">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
 </head>
+
 <body>
-  <h1>Welcome to Not Just Vienna!</h1>
-  <p>Your creative guide to Vienna.</p>
+  <header class="navbar">
+    <a class="logo" href="#">NOT JUST VIENNA<span>✳</span></a>
+    <nav>
+      <a href="#explore">Explore</a>
+      <a href="#about">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <p class="eyebrow">THE UNCONVENTIONAL CITY GUIDE · EST. 2026</p>
+        <h1>VIENNA,<br>BUT MAKE<br>IT <em>LOCAL.</em></h1>
+        <p class="hero-description">
+          Forget the ordinary. Discover the coffee spots,
+          hidden corners and little moments that make
+          Vienna worth falling in love with.
+        </p>
+        <a class="hero-button" href="#explore">LET'S EXPLORE ↗</a>
+      </div>
+      <div class="hero-image" role="img" aria-label="A street in Vienna"></div>
+      <span class="hero-sticker">SERVUS! ☺</span>
+    </section>
+
+    <div class="ticker">
+      <div>GOOD COFFEE ✳ GREAT PLACES ✳ LOCAL STORIES ✳ YOUR VIENNA ✳</div>
+    </div>
+
+    <section id="explore" class="explore">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">HANDPICKED FOR YOU</p>
+          <h2>THE VIENNA EDIT<span>®</span></h2>
+        </div>
+        <p>Not your average tourist checklist.</p>
+      </div>
+
+      <div class="filters">
+        <button class="filter active" data-filter="all">ALL SPOTS</button>
+        <button class="filter" data-filter="coffee">COFFEE</button>
+        <button class="filter" data-filter="culture">CULTURE</button>
+        <button class="filter" data-filter="explore">EXPLORE</button>
+      </div>
+
+      <div class="places-grid">
+        <article class="place-card" data-category="coffee">
+          <div class="image-wrap">
+            <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=900" alt="Coffee in a café">
+            <span class="place-tag">COFFEE</span>
+          </div>
+          <div class="place-info">
+            <h3>Café Central ↗</h3>
+            <span>1010 WIEN</span>
+          </div>
+          <p>A little piece of coffeehouse history.</p>
+        </article>
+
+        <article class="place-card" data-category="culture">
+          <div class="image-wrap">
+            <img src="https://images.unsplash.com/photo-1577083552431-6e5fd01988a5?w=900" alt="Art exhibition">
+            <span class="place-tag">CULTURE</span>
+          </div>
+          <div class="place-info">
+            <h3>MuseumsQuartier ↗</h3>
+            <span>1070 WIEN</span>
+          </div>
+          <p>Art, architecture and creative energy.</p>
+        </article>
+
+        <article class="place-card" data-category="explore">
+          <div class="image-wrap">
+            <img src="https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?w=900" alt="European city architecture">
+            <span class="place-tag">EXPLORE</span>
+          </div>
+          <div class="place-info">
+            <h3>Vienna Walks ↗</h3>
+            <span>ALL DISTRICTS</span>
+          </div>
+          <p>Get lost. Find something wonderful.</p>
+        </article>
+      </div>
+      <button id="surprise-btn" class="surprise-button">SURPRISE ME ↗</button>
+      <p id="surprise-result" aria-live="polite"></p>
+    </section>
+
+    <section id="about" class="about">
+      <p class="eyebrow">A LOVE LETTER TO THE CITY</p>
+      <h2>LESS TOURIST.<br><em>MORE VIENNA.</em></h2>
+      <p>Curated corners, memorable experiences, and a fresh perspective on Vienna.</p>
+    </section>
+  </main>
+
+  <footer>
+    <strong>NOT JUST VIENNA ✳</strong>
+    <span>MADE WITH LOVE IN WIEN © 2026</span>
+  </footer>
 </body>
 </html>
