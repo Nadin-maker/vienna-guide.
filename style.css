@@ -2,13 +2,20 @@
 /* ---------- VERSION 2.1 FIXES ---------- */
 
 /* IMPORTANT: fix broken Leaflet tiles */
-.leaflet-container img,
+
+/* Keep Leaflet's own tile dimensions */
 .leaflet-container .leaflet-tile,
 .leaflet-container .leaflet-marker-icon,
 .leaflet-container .leaflet-marker-shadow {
   max-width: none !important;
-  width: auto !important;
+  max-height: none !important;
 }
+
+/* Prevent the global image rule from affecting map tiles */
+.leaflet-container .leaflet-tile {
+  display: block;
+}
+
 
 #vienna-map {
   height: 420px;
